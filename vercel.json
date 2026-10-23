@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "redirects": [{ "source": "/blog", "destination": "/journal", "permanent": true }],
   "headers": [
     {
       "source": "/(.*)",

@@ -1,5 +1,5 @@
 import React from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import '@fontsource/archivo/400.css'
 import '@fontsource/archivo/500.css'
@@ -9,10 +9,13 @@ import '@fontsource/instrument-serif/400-italic.css'
 import './styles.css'
 import App from './App.jsx'
 
-createRoot(document.getElementById('root')).render(
+const app = (
   <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
   </React.StrictMode>
 )
+const root = document.getElementById('root')
+if (root.hasChildNodes()) hydrateRoot(root, app)
+else createRoot(root).render(app)

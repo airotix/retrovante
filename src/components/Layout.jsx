@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { PAGES } from '../data.js'
+import Seo from './Seo.jsx'
 
 function ScrollManager() {
   const { pathname } = useLocation()
@@ -11,22 +12,22 @@ function ScrollManager() {
 const NAV_MAIN = [['/', 'Home'], ['/products', 'Products'], ['/about', 'About'], ['/services', 'Services'], ['/pricing', 'Pricing']]
 const NAV_MORE = [['/portfolio', 'Portfolio'], ['/how-it-works', 'How It Works'], ['/testimonials', 'Testimonials'], ['/journal', 'Journal'], ['/faq', 'FAQ']]
 
-function Header({ open, setOpen }) {
+function Header({ open, setOpen, menuButton }) {
   const { pathname } = useLocation()
   const moreActive = NAV_MORE.some(([p]) => p === pathname)
   return (
     <header className={`site ${open ? 'menu-open' : ''}`}>
       <div className="bar">
-        <Link to="/" className="logo" aria-label="RetroVante — home">RETROVANTE<sup>°</sup></Link>
+        <Link to="/" className="logo" tabIndex={open ? -1 : undefined} aria-label="RetroVante — home">RETROVANTE<sup>°</sup></Link>
         <nav className="bar-links" aria-label="Primary">
           {NAV_MAIN.map(([to, n]) => <NavLink key={to} to={to} end={to === '/'}>{n}</NavLink>)}
-          <div className="more">
-            <button type="button" className={moreActive ? 'active' : ''} aria-haspopup="true">More <span aria-hidden="true">▾</span></button>
+          <details className="more" key={pathname}>
+            <summary className={moreActive ? 'active' : ''}>More <span aria-hidden="true">▾</span></summary>
             <div className="drop">{NAV_MORE.map(([to, n]) => <NavLink key={to} to={to}>{n}</NavLink>)}</div>
-          </div>
+          </details>
         </nav>
         <Link to="/contact" className="cta-pill">Book a Fitting</Link>
-        <button className="menu-btn mono" aria-expanded={open} aria-controls="menu" onClick={() => setOpen(!open)}>
+        <button ref={menuButton} className="menu-btn mono" aria-expanded={open} aria-controls="menu" onClick={() => setOpen(!open)}>
           {open ? 'Close' : 'Menu'} <span className="burger" aria-hidden="true"><i /><i /></span>
         </button>
       </div>
@@ -34,34 +35,51 @@ function Header({ open, setOpen }) {
   )
 }
 
-function Menu({ open, setOpen }) {
+function Menu({ open, setOpen, menuButton }) {
   const first = useRef(null)
+  const menu = useRef(null)
+  const wasOpen = useRef(false)
   useEffect(() => {
     document.body.classList.toggle('lock', open)
     if (open) first.current?.focus()
-    const esc = (e) => e.key === 'Escape' && setOpen(false)
-    window.addEventListener('keydown', esc)
-    return () => { window.removeEventListener('keydown', esc); document.body.classList.remove('lock') }
-  }, [open, setOpen])
+    else if (wasOpen.current) menuButton.current?.focus()
+    wasOpen.current = open
+    const keyboard = (e) => {
+      if (!open) return
+      if (e.key === 'Escape') { e.preventDefault(); setOpen(false) }
+      if (e.key === 'Tab') {
+        const links = [...menu.current.querySelectorAll('a')]
+        const controls = [menuButton.current, ...links]
+        const current = controls.indexOf(document.activeElement)
+        e.preventDefault()
+        controls[(current + (e.shiftKey ? -1 : 1) + controls.length) % controls.length]?.focus()
+      }
+    }
+    const desktop = window.matchMedia('(min-width: 1121px)')
+    const resize = () => { if (desktop.matches) setOpen(false) }
+    desktop.addEventListener('change', resize)
+    window.addEventListener('keydown', keyboard)
+    return () => { desktop.removeEventListener('change', resize); window.removeEventListener('keydown', keyboard); document.body.classList.remove('lock') }
+  }, [open, setOpen, menuButton])
   return (
-    <div id="menu" className={`menu ${open ? 'open' : ''}`} role="dialog" aria-modal="true" aria-label="Site menu" aria-hidden={!open}>
+    <nav ref={menu} id="menu" className={`menu ${open ? 'open' : ''}`} aria-label="Site menu" aria-hidden={!open}>
       <ul>
         {PAGES.map((p, i) => (
           <li key={p.path} style={{ '--i': i }}>
-            <NavLink to={p.path} end={p.path === '/'} ref={i === 0 ? first : null} tabIndex={open ? 0 : -1}>
+            <NavLink to={p.path} onClick={() => setOpen(false)} end={p.path === '/'} ref={i === 0 ? first : null} tabIndex={open ? 0 : -1}>
               <span className="mono">{String(i + 1).padStart(2, '0')}</span>{p.name}
             </NavLink>
           </li>
         ))}
       </ul>
       <div className="menu-foot mono">hello@retrovante.com<span>Free shipping · 30-day returns · Lifetime repair</span></div>
-    </div>
+    </nav>
   )
 }
 
-function Footer() {
+function Footer({ open }) {
   return (
-    <footer className="site">
+    <footer className="site" inert={open ? '' : undefined}>
       <div className="wrap">
         <div className="fcta">
           <h2>Wear it<br />for <span className="serif">decades.</span></h2>
@@ -84,16 +102,18 @@ function Footer() {
 
 export default function Layout({ children }) {
   const [open, setOpen] = useState(false)
+  const menuButton = useRef(null)
   const { pathname } = useLocation()
   useEffect(() => setOpen(false), [pathname])
   return (
     <>
-      <a className="skip" href="#main">Skip to content</a>
+      <a className="skip" href="#main" tabIndex={open ? -1 : undefined}>Skip to content</a>
+      <Seo />
       <ScrollManager />
-      <Header open={open} setOpen={setOpen} />
-      <Menu open={open} setOpen={setOpen} />
-      <main id="main">{children}</main>
-      <Footer />
+      <Header open={open} setOpen={setOpen} menuButton={menuButton} />
+      <Menu open={open} setOpen={setOpen} menuButton={menuButton} />
+      <main id="main" tabIndex={-1} inert={open ? '' : undefined}>{children}</main>
+      <Footer open={open} />
     </>
   )
 }

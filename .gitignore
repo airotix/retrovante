@@ -12,3 +12,6 @@ Thumbs.db
 src/assets/retrovante-jacket-cutouts/
 src/assets/retrovante-jacket-cutouts.zip
 src/assets/_unused/
+
+.prerender/
+.vercel/

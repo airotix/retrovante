@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import Hero from '../components/Hero.jsx'
 import { Cutout, Reveal, Counter, Marquee } from '../components/ui.jsx'
 import { PRODUCTS, QUOTES } from '../data.js'
 
 export default function Home() {
-  useEffect(() => { document.title = 'RetroVante — Leather Jackets' }, [])
   return (
     <>
       <Hero />

@@ -17,11 +17,10 @@ export function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
 }
 
 export function PageHead({ name, children, lead }) {
-  useEffect(() => { document.title = `${name} — RetroVante Leather` }, [name])
   return (
     <div className="page-head">
       <div className="wrap">
-        <div className="crumbs"><Link to="/">Home</Link> / {name}</div>
+        <nav className="crumbs" aria-label="Breadcrumb"><Link to="/">Home</Link> / <span aria-current="page">{name}</span></nav>
         <h1>{children}</h1>
         <p className="lead">{lead}</p>
       </div>
@@ -31,10 +30,11 @@ export function PageHead({ name, children, lead }) {
 
 export function Counter({ end, suffix = '' }) {
   const ref = useRef(null)
-  const [v, setV] = useState(0)
+  const [v, setV] = useState(end)
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let frame
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return
       io.disconnect()
@@ -42,14 +42,14 @@ export function Counter({ end, suffix = '' }) {
       const tick = (t) => {
         const p = Math.min((t - t0) / 1600, 1)
         setV(Math.round(end * (1 - Math.pow(1 - p, 3))))
-        if (p < 1) requestAnimationFrame(tick)
+        if (p < 1) frame = requestAnimationFrame(tick)
       }
-      requestAnimationFrame(tick)
+      frame = requestAnimationFrame(tick)
     })
     io.observe(el)
-    return () => io.disconnect()
+    return () => { io.disconnect(); cancelAnimationFrame(frame) }
   }, [end])
-  return <strong ref={ref}>{v.toLocaleString()}{suffix}</strong>
+  return <strong ref={ref}>{v.toLocaleString('en-US')}{suffix}</strong>
 }
 
 export function Marquee({ items }) {

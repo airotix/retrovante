@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.local
+
+# editor / OS
+.DS_Store
+Thumbs.db
+*.log
+
+# original full-size cutouts (optimised copies live in src/assets/jackets)
+src/assets/retrovante-jacket-cutouts/
+src/assets/retrovante-jacket-cutouts.zip
+src/assets/_unused/

@@ -23,6 +23,13 @@ for (const route of [...Object.keys(SEO), '/404']) {
   assert.equal(schema['@context'], 'https://schema.org')
   assert.ok(schema['@graph'].some((item) => item['@type'] === 'WebSite' && item.name === 'RetroVante'))
   assert.ok(html.includes('<main'), `${route}: page content is in initial HTML`)
+  for (const [, candidates] of html.matchAll(/srcSet="([^"]+)"/gi)) {
+    for (const candidate of candidates.split(',')) {
+      const [asset, width] = candidate.trim().split(/\s+/)
+      assert.match(width, /^\d+w$/, `${route}: valid responsive width`)
+      await access(`dist${asset}`)
+    }
+  }
   for (const [, asset] of html.matchAll(/(?:src|href)="(\/(?:assets\/[^"?#]+|[^"?#]+\.(?:png|svg|ico|webmanifest)))"/g)) await access(`dist${asset}`)
   for (const [, link] of html.matchAll(/href="(\/[^"?#]*)"/g)) {
     if (link.includes('.')) continue

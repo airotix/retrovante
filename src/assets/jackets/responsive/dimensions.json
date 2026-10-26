@@ -1,0 +1,54 @@
+{
+  "atlas": {
+    "width": 1350,
+    "height": 1063
+  },
+  "aviator": {
+    "width": 1162,
+    "height": 1337
+  },
+  "back": {
+    "width": 1212,
+    "height": 1295
+  },
+  "collar": {
+    "width": 1086,
+    "height": 1209
+  },
+  "drifter": {
+    "width": 1086,
+    "height": 1225
+  },
+  "foundry": {
+    "width": 1168,
+    "height": 1292
+  },
+  "interior": {
+    "width": 1086,
+    "height": 1237
+  },
+  "marshal": {
+    "width": 1226,
+    "height": 1242
+  },
+  "meridian": {
+    "width": 1386,
+    "height": 1121
+  },
+  "nightshift": {
+    "width": 1432,
+    "height": 1045
+  },
+  "outlaw": {
+    "width": 1351,
+    "height": 1150
+  },
+  "rancher": {
+    "width": 1396,
+    "height": 1086
+  },
+  "rover": {
+    "width": 1267,
+    "height": 1076
+  }
+}

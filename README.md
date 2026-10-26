@@ -46,3 +46,8 @@ After deploying to the domain, verify ownership in Google Search Console, submit
 
 ## Responsive behavior
 Layouts cover narrow phones, tablets, desktop and landscape screens. The menu scrolls on short screens and supports Escape, keyboard focus cycling and focus return. Carousel controls allow manual selection and pausing; reduced-motion preferences disable automatic rotation and decorative animation. Static page content remains visible without JavaScript.
+
+## Performance
+Jacket images include 480px and 960px WebP variants, with original artwork retained for high-density displays. `srcset` and layout-specific `sizes` select the delivery file; below-the-fold images remain lazy-loaded. After adding or replacing originals, run `python scripts/optimize-jackets.py` with Pillow, then commit the generated `src/assets/jackets/responsive` files. Deployment builds do not require Python.
+
+The hero retains its 3D orbit at a maximum of 30 visual updates per second, without per-frame blur or pointer parallax. Its animation loop stops when paused, outside the viewport, or in a hidden tab. Reduced-motion users start with rotation paused and can still use manual controls. The English site uses Latin font subsets, four font files instead of five, and preloads the main body and heading fonts. Run `npm run build` and `npm run check` before pushing, then rerun GTmetrix on the deployed version with the same test settings; local asset reductions are not a measured Lighthouse score.

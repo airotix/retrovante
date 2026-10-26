@@ -20,7 +20,7 @@ export default function Products() {
           <div className="g3">
             {list.map((p) => (
               <Link to="/contact" className="card" key={p.id}>
-                <Cutout jk={p.jk} alt={`${p.name} leather jacket`} ratio="r45" />
+                <Cutout jk={p.jk} alt={`${p.name} leather jacket`} ratio="r45" sizes="(max-width: 560px) 88vw, (max-width: 900px) 40vw, 380px" />
                 <div className="meta"><div><h3>{p.name}</h3><div className="tag">{p.cat}</div></div><div className="price">{p.price}</div></div>
                 <p className="small">{p.desc}</p>
               </Link>

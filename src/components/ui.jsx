@@ -1,19 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { JK } from '../jackets.js'
+import { JK, JK_SRCSET, JK_DIMENSIONS } from '../jackets.js'
 
-/** Fade/slide in on scroll. */
+/** Keep static content visible without per-element observers or hydration updates. */
 export function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
-  const ref = useRef(null)
-  const [on, setOn] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !('IntersectionObserver' in window)) { setOn(true); return }
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect() } }, { threshold: 0.12 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return <Tag ref={ref} className={`rv ${on ? 'in' : ''} ${className}`} {...rest}>{children}</Tag>
+  return <Tag className={`rv in ${className}`} {...rest}>{children}</Tag>
 }
 
 export function PageHead({ name, children, lead }) {
@@ -62,10 +53,10 @@ export function Marquee({ items }) {
 }
 
 /** Transparent jacket cut-out on a soft tone tile. ratio: r34 | r45 | r11 | r32 */
-export function Cutout({ jk, alt, ratio = 'r34', className = '' }) {
+export function Cutout({ jk, alt, ratio = 'r34', className = '', sizes = '(max-width: 900px) 88vw, 560px' }) {
   return (
     <div className={`ph cut ${ratio} ${className}`}>
-      <img src={JK[jk]} alt={alt} loading="lazy" decoding="async" />
+      <img src={JK[jk]} srcSet={JK_SRCSET[jk]} sizes={sizes} width={JK_DIMENSIONS[jk].width} height={JK_DIMENSIONS[jk].height} alt={alt} loading="lazy" decoding="async" />
     </div>
   )
 }

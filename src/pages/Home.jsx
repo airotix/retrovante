@@ -19,7 +19,7 @@ export default function Home() {
           <div className="g3">
             {PRODUCTS.slice(0, 3).map((p) => (
               <Reveal as={Link} to="/products" className="card" key={p.name}>
-                <Cutout jk={p.jk} alt={`${p.name} leather jacket`} />
+                <Cutout jk={p.jk} alt={`${p.name} leather jacket`} sizes="(max-width: 560px) 88vw, (max-width: 900px) 40vw, 380px" />
                 <div className="meta"><div><h3>{p.name}</h3><div className="tag">{p.cat}</div></div><div className="price">{p.price}</div></div>
               </Reveal>
             ))}

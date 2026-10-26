@@ -44,10 +44,10 @@ export default function Home() {
           <div className="eyebrow">By the numbers</div>
           <h2 className="mt mb" style={{ maxWidth: '14ch' }}>Built in public. Worn for life.</h2>
           <div className="stats">
-            <div><Counter end={12000} suffix="+" /><span>Jackets delivered</span></div>
-            <div><Counter end={38} /><span>Countries shipped</span></div>
+            <div><Counter end={3000} suffix="+" /><span>Jackets delivered</span></div>
+            <div><Counter end={12} /><span>Countries shipped</span></div>
             <div><Counter end={98} suffix="%" /><span>Would buy again</span></div>
-            <div><Counter end={10} suffix=" yrs" /><span>Repair guarantee</span></div>
+            <div><Counter end={25} suffix=" yrs" /><span>Repair guarantee</span></div>
           </div>
         </div>
       </section>

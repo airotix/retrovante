@@ -17,8 +17,9 @@ export default function Seo() {
     let canonical = document.head.querySelector('link[rel="canonical"]')
     if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.append(canonical) }
     canonical.href = meta.url
-    const schema = document.getElementById('site-schema')
-    if (schema) schema.textContent = JSON.stringify(structuredData(pathname))
+    let schema = document.getElementById('site-schema')
+    if (!schema) { schema = document.createElement('script'); schema.id = 'site-schema'; schema.type = 'application/ld+json'; document.head.append(schema) }
+    schema.textContent = JSON.stringify(structuredData(pathname))
   }, [pathname])
   return null
 }
